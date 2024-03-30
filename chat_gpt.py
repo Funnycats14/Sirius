@@ -2,7 +2,7 @@ import pandas as pd
 from catboost import CatBoostRegressor
 
 from openai import OpenAI
-client = OpenAI(api_key='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')
+client = OpenAI(api_key='')
 
 #подготовим данные
 df = pd.read_csv('data.csv')

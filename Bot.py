@@ -2,7 +2,7 @@ from telebot.async_telebot import AsyncTeleBot
 import asyncio
 from chat_gpt import get_responce
 
-bot = AsyncTeleBot('7166703956:AAEM5UfvdgQ9tdZbFYp11mSTODFYfngiLy4')
+bot = AsyncTeleBot('')
 
 @bot.message_handler(commands=['start', '/start'])
 async def start_reaction(message):
