@@ -53,27 +53,32 @@ model = CatBoostRegressor(iterations=1250,  # количество деревь�
 model.fit(X, y, cat_features=[0, 1, 3, 10, 11, 8, 9])  # Указываем индексы категориальных признаков
 
 def get_responce(text):
-    completion = client.chat.completions.create(
-        model='gpt-4-0125-preview',
-        messages=[
-            {"role": "system", "content": open("input.txt","r").read()},
-            {"role": "user", "content": text}
-        ]
-    )
-    request = completion.choices[0].message.content.split(",")
-    print(request)
-    for feature in request:
-        try:
-            feature = int(feature)
-        except: pass
-    print(request)
+    try:
+        completion = client.chat.completions.create(
+            model='gpt-4-0125-preview',
+            messages=[
+                {"role": "system", "content": open("input.txt","r").read()},
+                {"role": "user", "content": text}
+            ]
+        )
+        request = completion.choices[0].message.content.split(",")
+    except:
+        return "Ошибка получения данных от ChatGpt"
+    
+    try:
+        for i in range(len(request)):
+            try:
+                request[i] = int(request[i])
+            except: pass
+        print(request)
 
-    columns = ['Apartment type', 'Metro station', 'Minutes to metro', 'Region', 'Number of rooms',
-            'Area', 'Floor', 'Number of floors', 'Renovation']
+        columns = ['Apartment type', 'Metro station', 'Minutes to metro', 'Region', 'Number of rooms',
+                'Area', 'Floor', 'Number of floors', 'Renovation']
 
-    request_df = pd.DataFrame([request], columns=columns)
-    request_df = pd.merge(request_df, districts, on='Metro station', how='left')
-    request_df = pd.merge(request_df, distances, on='Metro station', how='left')
+        request_df = pd.DataFrame([request], columns=columns)
+        request_df = pd.merge(request_df, districts, on='Metro station', how='left')
+        request_df = pd.merge(request_df, distances, on='Metro station', how='left')
 
-    return float(model.predict(request_df)[0])*1.0908 # Инфляция с момента сбора данных
+        return float(model.predict(request_df)[0])*1.0908 # Инфляция с момента сбора данных
+    except: return "Ошибка обработки полученных данных(ChatGpt вернул формат, который не сходится с промптом)"
 # ['Secondary', 'окружная', 15, 'Moscow', 2, 50, 15, 25, 'Cosmetic']
