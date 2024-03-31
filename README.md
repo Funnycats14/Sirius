@@ -14,3 +14,5 @@ pip install -r requirements.txt
 | input.txt               | Промпт для обработки информации от пользователя       |
 | metro_distances.xlsx    | Дистанции до метро                                    |
 | metro_info.xlsx         | Информация о метро                                    |
+| доп. задание сириус.ии.ipynb | Решение доп задания                              |
+| Gradient Boosting itog.ipynb | Файл с обучением модели                          |
